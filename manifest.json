@@ -1,0 +1,11 @@
+{
+  "id": "personal-capital",
+  "name": "Personal Capital",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Cashflow export & asset helpers for your finance vault.",
+  "author": "Personal capital",
+  "isDesktopOnly": false,
+  "styles": ["styles.css"]
+}
+
