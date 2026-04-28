@@ -22,7 +22,8 @@ Cashflow, assets, dividends, deposits, FX, all in plain text inside your vault.
 ## Why
 
 The easy way to finally start tracking your expenses and budget, and even more: grow your investments.
-(!) Local-first, never loose your data. I build it for myself, but decided to share.
+
+Built it for myself, but decided to share.
 
 **Personal Capital** keeps everything in your Obsidian vault as plain text:
 
@@ -72,7 +73,7 @@ Log money movements as they happen, let the dashboard derive everything else, re
 │  Log entry  │ ─► │  Auto-fetch  │ ─► │ Dashboard view │ ─► │  Reconcile  │
 │ (income,    │    │ prices, FX,  │    │ (net worth,    │    │ (vs real    │
 │  expense,   │    │  dividends   │    │  P&L, budget)  │    │  accounts)  │
-│  buy/sell)  │    │              │    │                │    │             │
+│  buy/sell)  │    │ (once w/m)   │    │                │    │             │
 └─────────────┘    └──────────────┘    └────────────────┘    └─────────────┘
 ```
 
