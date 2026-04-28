@@ -22,7 +22,7 @@ Cashflow, assets, dividends, deposits, FX, all in plain text inside your vault.
 ## Why
 
 The easy way to finally start tracking your expenses and budget, and even more: grow your investments.
-(!) Local-first, you never loose or share your data to unknown receipents.
+(!) Local-first, never loose your data. I build it for myself, but decided to share.
 
 **Personal Capital** keeps everything in your Obsidian vault as plain text:
 
