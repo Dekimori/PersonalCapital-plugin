@@ -29,8 +29,10 @@ The easy way to finally start tracking your expenses and budget, and even more: 
 - A JSONL ledger is the single source of truth with one file per year, version-control-friendly.
 - The dashboard is rendered live from the ledger. No hidden state, no migrations, no lock-in.
 - Track your investments with fetch parser and auto update.
-- This app is not an accountant tool for buisness, strategy-first, forgiving mistakes, reconcile when needed.
 - Migrate to / from beancount ledger (in development)
+
+**Why manual?** Its not an accountant tool for buisness, the Strategy > than the Detalis. 
+Organising your finance yourself is a habbit that will 100% make you more smart and efficient.
 
 ---
 
@@ -62,7 +64,8 @@ A `finance/` folder is scaffolded on first activation with an empty dashboard re
 
 </div>
 
-The basic loop is simple. Log money movements as they happen, let the dashboard derive everything else, reconcile when reality drifts from the ledger.
+The basic loop is simple. If you never tracked your budget just start to fill it, nothing more.
+Log money movements as they happen, let the dashboard derive everything else, reconcile when reality drifts from the ledger.
 
 ```
 ┌─────────────┐    ┌──────────────┐    ┌────────────────┐    ┌─────────────┐
