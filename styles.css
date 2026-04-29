@@ -980,6 +980,10 @@
 .pc-asset-grid {
   display:               grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* `dense` lets the browser back-fill empty cells when an inline accordion
+     spans a full row. Without it, opening card #1 reserves row 2 for the
+     accordion and pushes cards #2/#3 to row 3 — breaking the visual layout. */
+  grid-auto-flow:        dense;
   gap:                   10px;
 }
 
