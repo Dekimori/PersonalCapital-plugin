@@ -135,6 +135,9 @@ Everything is live. No manual refresh. Edit a ledger line and the dashboard upda
 
 ## Privacy & network
 
+(!) I have used claude to combine all my typescript garbage in a single js, fix bugs and research.
+(!!) Most of formulas and base logic hand-written, since I trust my economy education, still have to fix smth here and there.. 
+
 Everything runs locally. Outbound requests are limited to public, read-only market-data endpoints:
 
 | Endpoint | Purpose |
