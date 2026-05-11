@@ -1,7 +1,7 @@
 {
   "id": "personal-capital",
   "name": "Personal Capital",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "minAppVersion": "1.0.0",
   "description": "Personal finance for Obsidian. Cashflow, assets, dividends, deposits, FX — all in plain text inside your vault.",
   "author": "Personal capital",

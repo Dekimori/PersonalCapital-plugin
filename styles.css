@@ -2749,3 +2749,85 @@
   font-size: 0.85em;
 }
 .pc-settings-fx-add-code { text-transform: uppercase; }
+
+/* ── Settings: section dividers ──────────────────────────────────────
+   Each top-level <h3 class="pc-settings-section"> gets a top border so
+   the settings page reads as discrete blocks (Folders, Currency,
+   Accounts, …). First section skips the border since the H2 title
+   already provides visual separation. */
+h3.pc-settings-section {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--background-modifier-border);
+  font-weight: 600;
+}
+h3.pc-settings-section:first-of-type {
+  margin-top: 16px;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* ── Settings: Import/Export block ───────────────────────────────────
+   Single feature block with top separator + accordion sub-sections.
+   Uses native <details>/<summary> for the disclosure widget. */
+.pc-settings-block {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+.pc-ie-block .pc-ie-title {
+  margin: 0 0 4px 0;
+}
+.pc-ie-intro {
+  margin-bottom: 14px;
+}
+.pc-ie-accordion {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  margin: 8px 0;
+  padding: 0;
+  overflow: hidden;
+  transition: background-color 0.15s ease;
+}
+.pc-ie-accordion[open] {
+  background: var(--background-secondary);
+}
+.pc-ie-summary {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95em;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  outline: none;
+}
+.pc-ie-summary::-webkit-details-marker {
+  display: none;
+}
+.pc-ie-summary::before {
+  content: "▶";
+  font-size: 0.7em;
+  transition: transform 0.15s ease;
+  color: var(--text-muted);
+}
+.pc-ie-accordion[open] > .pc-ie-summary::before {
+  transform: rotate(90deg);
+}
+.pc-ie-summary:hover {
+  background: var(--background-modifier-hover);
+}
+.pc-ie-accordion > .setting-item-description,
+.pc-ie-accordion > p {
+  padding: 0 14px;
+  margin: 8px 0;
+}
+.pc-ie-accordion > .setting-item {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+.pc-ie-accordion > .pc-settings-map-grid {
+  padding: 0 14px 12px;
+}
