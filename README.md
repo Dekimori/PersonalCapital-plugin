@@ -5,8 +5,10 @@
 **Personal finance for Obsidian.**
 Cashflow, assets, dividends, deposits, FX, all in plain text inside your vault.
 
-![Obsidian](https://img.shields.io/badge/Obsidian-1.0.0%2B-7c3aed?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
+![Version](https://img.shields.io/github/manifest-json/v/Dekimori/PersonalCapital-plugin?style=flat-square&color=7c3aed&label=version)
+![Obsidian](https://img.shields.io/github/manifest-json/minAppVersion/Dekimori/PersonalCapital-plugin?style=flat-square&color=7c3aed&label=Obsidian)
+![CI](https://img.shields.io/github/actions/workflow/status/Dekimori/PersonalCapital-plugin/ci.yml?branch=main&style=flat-square&label=CI)
+![License](https://img.shields.io/github/license/Dekimori/PersonalCapital-plugin?style=flat-square&color=green)
 ![Platform](https://img.shields.io/badge/platform-desktop%20%7C%20mobile-blue?style=flat-square)
 
 </div>
