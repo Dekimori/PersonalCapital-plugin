@@ -6,7 +6,6 @@
 Cashflow, assets, dividends, deposits, FX, all in plain text inside your vault.
 
 ![Version](https://img.shields.io/github/manifest-json/v/Dekimori/PersonalCapital-plugin?style=flat-square&color=7c3aed&label=version)
-![Obsidian min](https://img.shields.io/github/manifest-json/minAppVersion/Dekimori/PersonalCapital-plugin?style=flat-square&color=7c3aed&label=Obsidian%20min)
 ![Tested with](https://img.shields.io/github/manifest-json/testedWithObsidian/Dekimori/PersonalCapital-plugin?style=flat-square&color=7c3aed&label=tested%20with)
 ![CI](https://img.shields.io/github/actions/workflow/status/Dekimori/PersonalCapital-plugin/ci.yml?branch=main&style=flat-square&label=CI)
 ![License](https://img.shields.io/github/license/Dekimori/PersonalCapital-plugin?style=flat-square&color=green)
