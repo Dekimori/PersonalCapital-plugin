@@ -15,7 +15,8 @@
     "format:check": "prettier --check src/",
     "test": "NODE_OPTIONS='--import tsx' vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "mark-tested": "node scripts/mark-tested.mjs"
   },
   "keywords": [],
   "author": "",
