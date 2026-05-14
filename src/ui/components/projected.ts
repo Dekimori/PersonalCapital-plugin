@@ -1,6 +1,12 @@
-const { fmt } = require("../../core/utils");
+import { fmt } from "../../core/utils";
+import type { BudgetSummary, ProjectedRow } from "../../domain/budget/summary";
 
-function renderProjected(container, proj, sym, budget) {
+export function renderProjected(
+  container: HTMLElement,
+  proj: ProjectedRow[],
+  sym: string,
+  budget: BudgetSummary
+): void {
   if (proj.length === 0) {
     container.createEl("p", {
       cls: "pc-empty",
@@ -20,12 +26,17 @@ function renderProjected(container, proj, sym, budget) {
   const list = ticket.createEl("ul", { cls: "pc-projected-list" });
 
   // Group by type
-  const grouped = {};
+  const grouped: Record<string, ProjectedRow[]> = {};
   for (const p of proj) {
     (grouped[p.type] = grouped[p.type] || []).push(p);
   }
 
-  const typeLabel = { Income: "Income", Needs: "Needs", Wants: "Wants", Saves: "Saves" };
+  const typeLabel: Record<string, string> = {
+    Income: "Income",
+    Needs: "Needs",
+    Wants: "Wants",
+    Saves: "Saves",
+  };
 
   for (const type of ["Income", "Needs", "Wants"]) {
     const items = grouped[type];
@@ -54,7 +65,7 @@ function renderProjected(container, proj, sym, budget) {
   // Divider + total inside ticket
   ticket.createDiv({ cls: "pc-proj-tear" });
   let projTotal = 0;
-  for (const p of proj) projTotal += p.projected;
+  for (const p of proj) projTotal += p.projected ?? 0;
   projTotal -= budget.savesTarget;
   const totalRow = ticket.createDiv({ cls: "pc-proj-total-row" });
   totalRow.createEl("span", { cls: "pc-proj-total-label", text: "Net projected" });
@@ -63,5 +74,3 @@ function renderProjected(container, proj, sym, budget) {
     text: `${fmt(projTotal)} ${sym}`,
   });
 }
-
-module.exports = { renderProjected };

@@ -1,6 +1,7 @@
-const { Modal } = require("obsidian");
-const { showNotice, fmt, killWheelChange } = require("../../core/utils");
-const { writeLedgerEntry } = require("../../domain/ledger/io");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { showNotice, fmt, killWheelChange } from "../../core/utils";
+import { writeLedgerEntry } from "../../domain/ledger/io";
 
 class AddTransactionModal extends Modal {
   constructor(app, plugin, accounts, onDone) {
@@ -115,4 +116,4 @@ class AddTransactionModal extends Modal {
   }
 }
 
-module.exports = { AddTransactionModal };
+export { AddTransactionModal };

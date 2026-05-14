@@ -1,5 +1,6 @@
-const { fmt, getCurrentMonthKey, makeInteractive, killWheelChange } = require("../../core/utils");
-const { readWantsQueue, writeWantsQueue, cleanupDoneItems } = require("../../wants-queue");
+// @ts-nocheck — transitional; types incremental per file
+import { fmt, getCurrentMonthKey, makeInteractive, killWheelChange } from "../../core/utils";
+import { readWantsQueue, writeWantsQueue, cleanupDoneItems } from "../../wants-queue";
 
 function renderWantsQueue(container, app, settings, refreshDashboard) {
   let items = []; // loaded async below
@@ -144,4 +145,4 @@ function renderWantsQueue(container, app, settings, refreshDashboard) {
   });
 }
 
-module.exports = { renderWantsQueue };
+export { renderWantsQueue };

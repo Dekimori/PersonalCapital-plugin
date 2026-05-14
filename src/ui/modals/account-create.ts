@@ -1,5 +1,6 @@
-const { Modal } = require("obsidian");
-const { toNum, showNotice, killWheelChange } = require("../../core/utils");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { toNum, showNotice, killWheelChange } from "../../core/utils";
 
 const INVALID_PATH = /[\\/:*?"<>|]|\.\./;
 
@@ -117,4 +118,4 @@ class CreateAccountModal extends Modal {
   }
 }
 
-module.exports = { CreateAccountModal };
+export { CreateAccountModal };

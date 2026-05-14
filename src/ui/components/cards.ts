@@ -1,7 +1,12 @@
-const { fmt } = require("../../core/utils");
-const { fitCardText } = require("./fit-text");
+import { fmt } from "../../core/utils";
+import { fitCardText } from "./fit-text";
+import type { BudgetSummary } from "../../domain/budget/summary";
 
-function renderBudgetCards(container, budget, sym) {
+export function renderBudgetCards(
+  container: HTMLElement,
+  budget: BudgetSummary,
+  sym: string
+): void {
   const needsPct = budget.totalIncome > 0 ? (Math.abs(budget.needs) / budget.totalIncome) * 100 : 0;
   const savesPct = budget.savesRate ?? 0; // savings rate = saves / totalIncome
   const liquidOk = budget.left >= 0;
@@ -14,7 +19,7 @@ function renderBudgetCards(container, budget, sym) {
       ? Math.min(SEGS, Math.round((wantsAbs / budget.comfortBudget) * SEGS))
       : 0;
 
-  const cards = [
+  const cards: any[] = [
     {
       id: "needs",
       label: "Needs",
@@ -50,7 +55,7 @@ function renderBudgetCards(container, budget, sym) {
     },
   ];
 
-  const badgeText = {
+  const badgeText: Record<string, string> = {
     ok: "On track",
     over: "Over budget",
     partial: "Behind",
@@ -104,5 +109,3 @@ function renderBudgetCards(container, budget, sym) {
     }
   }
 }
-
-module.exports = { renderBudgetCards };

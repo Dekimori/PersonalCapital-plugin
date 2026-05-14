@@ -1,6 +1,7 @@
-const { toNum, fmt, fmtSigned } = require("../../core/utils");
-const { getLiquidTotal } = require("../../domain/accounts/balance");
-const { buildCapitalTimeline } = require("../../domain/budget/timeline");
+// @ts-nocheck — transitional; types incremental per file
+import { toNum, fmt, fmtSigned } from "../../core/utils";
+import { getLiquidTotal } from "../../domain/accounts/balance";
+import { buildCapitalTimeline } from "../../domain/budget/timeline";
 
 // ── Grain canvas — pixel-level noise (ported from React GrainCanvas) ──
 function paintGrainCanvas(container, w, h) {
@@ -485,4 +486,4 @@ function renderCapitalChart(container, history, assets, settings, budget, accoun
   draw(0);
 }
 
-module.exports = { paintGrainCanvas, interpolateSmooth, renderGrowthChart, renderCapitalChart };
+export { paintGrainCanvas, interpolateSmooth, renderGrowthChart, renderCapitalChart };
