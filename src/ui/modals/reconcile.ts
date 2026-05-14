@@ -1,3 +1,4 @@
+// @ts-nocheck — transitional; types incremental per file
 // ───────────────────────────────────────────────────────────────────
 // RECONCILE ACCOUNTS MODAL — close-the-books style.
 // ───────────────────────────────────────────────────────────────────
@@ -7,11 +8,11 @@
 // non-zero diff (category = "Reconciliation", note auto-filled) and
 // stamps `last_reconciled` on every account the user filled in.
 
-const { Modal } = require("obsidian");
-const { toNum, fmt, showNotice, killWheelChange } = require("../../core/utils");
-const { readAllLedger, writeLedgerEntry } = require("../../domain/ledger/io");
-const { readAccounts, updateLastReconciled } = require("../../domain/accounts/io");
-const { getAccountBalance } = require("../../domain/accounts/balance");
+import { Modal } from "obsidian";
+import { toNum, fmt, showNotice, killWheelChange } from "../../core/utils";
+import { readAllLedger, writeLedgerEntry } from "../../domain/ledger/io";
+import { readAccounts, updateLastReconciled } from "../../domain/accounts/io";
+import { getAccountBalance } from "../../domain/accounts/balance";
 
 class ReconcileAllModal extends Modal {
   constructor(app, plugin, onDone) {
@@ -247,4 +248,4 @@ class ReconcileAllModal extends Modal {
   }
 }
 
-module.exports = { ReconcileAllModal };
+export { ReconcileAllModal };

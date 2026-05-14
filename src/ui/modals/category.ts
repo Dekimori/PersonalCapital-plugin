@@ -1,5 +1,6 @@
-const { Modal } = require("obsidian");
-const { showNotice } = require("../../core/utils");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { showNotice } from "../../core/utils";
 
 class AddCategoryModal extends Modal {
   constructor(app, settings, onDone) {
@@ -92,4 +93,4 @@ class AddCategoryModal extends Modal {
   }
 }
 
-module.exports = { AddCategoryModal };
+export { AddCategoryModal };

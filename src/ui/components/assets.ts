@@ -1,7 +1,8 @@
-const { fmt, fmtSigned, showNotice, makeInteractive } = require("../../core/utils");
-const { updateAllAssetPrices } = require("../../domain/assets/prices");
-const { updateFxRates } = require("../../domain/assets/fx");
-const { applyTemplates } = require("../../domain/assets/templates");
+// @ts-nocheck — transitional; types incremental per file
+import { fmt, fmtSigned, showNotice, makeInteractive } from "../../core/utils";
+import { updateAllAssetPrices } from "../../domain/assets/prices";
+import { updateFxRates } from "../../domain/assets/fx";
+import { applyTemplates } from "../../domain/assets/templates";
 
 // Compute financial metrics for display
 function computeAssetMetrics(a) {
@@ -276,4 +277,4 @@ function renderAssetCards(container, assets, settings, app, plugin, dashContaine
   }
 }
 
-module.exports = { computeAssetMetrics, renderAssetCards };
+export { computeAssetMetrics, renderAssetCards };

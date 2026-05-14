@@ -1,4 +1,5 @@
-const { MONTH_KEYS, MONTH_NAMES, MONTH_SHORT } = require("../../core/constants");
+// @ts-nocheck — transitional; types incremental per file
+import { MONTH_KEYS, MONTH_NAMES, MONTH_SHORT } from "../../core/constants";
 const {
   toNum,
   fmt,
@@ -6,10 +7,10 @@ const {
   getCurrentMonthKey,
   makeInteractive,
 } = require("../../core/utils");
-const { readAllLedger, readLedgerMultiYear } = require("../../domain/ledger/io");
-const { readAccounts } = require("../../domain/accounts/io");
-const { getAccountBalance } = require("../../domain/accounts/balance");
-const { buildCashflowRows } = require("../../domain/budget/cashflow");
+import { readAllLedger, readLedgerMultiYear } from "../../domain/ledger/io";
+import { readAccounts } from "../../domain/accounts/io";
+import { getAccountBalance } from "../../domain/accounts/balance";
+import { buildCashflowRows } from "../../domain/budget/cashflow";
 
 async function renderLedgerClassic(app, settings, container, plugin, onChange) {
   container.empty();
@@ -193,7 +194,7 @@ async function renderLedgerMonthly(app, settings, container, plugin, onChange) {
 
   // Group by type
   let currentType = "";
-  let typeIncome = 0,
+  const typeIncome = 0,
     typeNeeds = 0,
     typeWants = 0;
   const monthTotals = {};
@@ -372,4 +373,4 @@ async function renderUnifiedLedger(app, settings, container, plugin) {
   await renderMode();
 }
 
-module.exports = { renderLedgerClassic, renderLedgerMonthly, renderUnifiedLedger };
+export { renderLedgerClassic, renderLedgerMonthly, renderUnifiedLedger };

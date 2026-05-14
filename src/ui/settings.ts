@@ -1,17 +1,18 @@
+// @ts-nocheck — transitional; types incremental per file
 // ───────────────────────────────────────────────────────────────────
 // SETTINGS TAB
 // ───────────────────────────────────────────────────────────────────
 
-const { PluginSettingTab, Setting, Modal } = require("obsidian");
-const { toNum, fmt, showNotice, killWheelChange } = require("../core/utils");
-const { COUNTRY_CURRENCY, COUNTRY_LIST } = require("./modals/onboarding");
-const { CreateAccountModal } = require("./modals/account-create");
-const { ReconcileAllModal } = require("./modals/reconcile");
-const { readAccounts } = require("../domain/accounts/io");
-const { readAllLedger, writeLedgerEntries } = require("../domain/ledger/io");
-const { getAccountBalance } = require("../domain/accounts/balance");
-const { updateFxRates } = require("../domain/assets/fx");
-const { exportToFile, importFromFile, readCategories, buildFullMap } = require("../io");
+import { PluginSettingTab, Setting, Modal } from "obsidian";
+import { toNum, fmt, showNotice, killWheelChange } from "../core/utils";
+import { COUNTRY_CURRENCY, COUNTRY_LIST } from "./modals/onboarding";
+import { CreateAccountModal } from "./modals/account-create";
+import { ReconcileAllModal } from "./modals/reconcile";
+import { readAccounts } from "../domain/accounts/io";
+import { readAllLedger, writeLedgerEntries } from "../domain/ledger/io";
+import { getAccountBalance } from "../domain/accounts/balance";
+import { updateFxRates } from "../domain/assets/fx";
+import { exportToFile, importFromFile, readCategories, buildFullMap } from "../io";
 
 class PersonalCapitalSettingTab extends PluginSettingTab {
   constructor(app, plugin) {
@@ -349,7 +350,7 @@ class PersonalCapitalSettingTab extends PluginSettingTab {
           .setCta(!ledgerExists)
           .onClick(async () => {
             const p = this.plugin.settings.ledgerNotePath || "finance/Ledger.md";
-            let f = this.app.vault.getAbstractFileByPath(p);
+            const f = this.app.vault.getAbstractFileByPath(p);
             if (!f) {
               const dir = p.split("/").slice(0, -1).join("/");
               if (dir && !this.app.vault.getAbstractFileByPath(dir)) {
@@ -704,4 +705,4 @@ class ImportPreviewModal extends Modal {
   }
 }
 
-module.exports = { PersonalCapitalSettingTab };
+export { PersonalCapitalSettingTab };

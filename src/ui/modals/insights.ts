@@ -1,7 +1,8 @@
-const { Modal } = require("obsidian");
-const { readAccounts } = require("../../domain/accounts/io");
-const { readLedgerMultiYear } = require("../../domain/ledger/io");
-const { buildChatPrompt, buildAgentPrompt } = require("../../ai/prompts");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { readAccounts } from "../../domain/accounts/io";
+import { readLedgerMultiYear } from "../../domain/ledger/io";
+import { buildChatPrompt, buildAgentPrompt } from "../../ai/prompts";
 
 class InsightsModal extends Modal {
   constructor(app, settings) {
@@ -174,4 +175,4 @@ class InsightsModal extends Modal {
   }
 }
 
-module.exports = { InsightsModal };
+export { InsightsModal };

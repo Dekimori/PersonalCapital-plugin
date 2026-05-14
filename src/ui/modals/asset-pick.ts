@@ -1,5 +1,6 @@
-const { SuggestModal } = require("obsidian");
-const { fmt } = require("../../core/utils");
+// @ts-nocheck — transitional; types incremental per file
+import { SuggestModal } from "obsidian";
+import { fmt } from "../../core/utils";
 
 class PickAssetModal extends SuggestModal {
   constructor(app, plugin, onPick) {
@@ -32,4 +33,4 @@ class PickAssetModal extends SuggestModal {
   }
 }
 
-module.exports = { PickAssetModal };
+export { PickAssetModal };

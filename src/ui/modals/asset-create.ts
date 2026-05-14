@@ -1,9 +1,10 @@
-const { Modal } = require("obsidian");
-const { ASSET_TYPES } = require("../../core/constants");
-const { toNum, showNotice, fmt, killWheelChange, makeAssetId } = require("../../core/utils");
-const { recalcAsset } = require("../../domain/assets/recalc");
-const { writeLedgerEntry } = require("../../domain/ledger/io");
-const { readAccounts } = require("../../domain/accounts/io");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { ASSET_TYPES } from "../../core/constants";
+import { toNum, showNotice, fmt, killWheelChange, makeAssetId } from "../../core/utils";
+import { recalcAsset } from "../../domain/assets/recalc";
+import { writeLedgerEntry } from "../../domain/ledger/io";
+import { readAccounts } from "../../domain/accounts/io";
 
 class CreateAssetModal extends Modal {
   constructor(app, plugin) {
@@ -368,4 +369,4 @@ class CreateAssetModal extends Modal {
   }
 }
 
-module.exports = { CreateAssetModal };
+export { CreateAssetModal };

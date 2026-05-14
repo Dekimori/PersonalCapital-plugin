@@ -1,5 +1,6 @@
-const { Modal } = require("obsidian");
-const { showNotice, killWheelChange } = require("../../core/utils");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { showNotice, killWheelChange } from "../../core/utils";
 
 class StrategyModal extends Modal {
   constructor(app, plugin, onSave) {
@@ -105,4 +106,4 @@ class StrategyModal extends Modal {
   }
 }
 
-module.exports = { StrategyModal };
+export { StrategyModal };

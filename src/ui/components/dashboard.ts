@@ -1,22 +1,23 @@
+// @ts-nocheck — transitional; types incremental per file
 // ───────────────────────────────────────────────────────────────────
 // DASHBOARD RENDERER
 // ───────────────────────────────────────────────────────────────────
 
-const { MONTH_SHORT } = require("../../core/constants");
-const { fmt, showNotice, makeInteractive } = require("../../core/utils");
-const { buildAssetFlowsAsync } = require("../../domain/assets/flows");
-const { buildCashflowRows } = require("../../domain/budget/cashflow");
-const { buildBudgetSummary, buildProjected } = require("../../domain/budget/summary");
-const { readCapitalHistory } = require("../../domain/budget/timeline");
-const { getLiquidTotal } = require("../../domain/accounts/balance");
-const { generateMonthlyReport } = require("../../report");
-const { renderBudgetCards } = require("./cards");
-const { renderProjected } = require("./projected");
-const { renderCapitalChart } = require("./chart");
-const { renderBaskets } = require("./baskets");
-const { renderAssetCards } = require("./assets");
-const { renderAnalysisBlock } = require("./analysis");
-const { renderWantsQueue } = require("./wants");
+import { MONTH_SHORT } from "../../core/constants";
+import { fmt, showNotice, makeInteractive } from "../../core/utils";
+import { buildAssetFlowsAsync } from "../../domain/assets/flows";
+import { buildCashflowRows } from "../../domain/budget/cashflow";
+import { buildBudgetSummary, buildProjected } from "../../domain/budget/summary";
+import { readCapitalHistory } from "../../domain/budget/timeline";
+import { getLiquidTotal } from "../../domain/accounts/balance";
+import { generateMonthlyReport } from "../../report";
+import { renderBudgetCards } from "./cards";
+import { renderProjected } from "./projected";
+import { renderCapitalChart } from "./chart";
+import { renderBaskets } from "./baskets";
+import { renderAssetCards } from "./assets";
+import { renderAnalysisBlock } from "./analysis";
+import { renderWantsQueue } from "./wants";
 
 async function renderDashboard(app, settings, container, plugin) {
   container.empty();
@@ -162,4 +163,4 @@ async function renderDashboard(app, settings, container, plugin) {
   };
 }
 
-module.exports = { renderDashboard };
+export { renderDashboard };

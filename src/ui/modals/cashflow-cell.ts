@@ -1,7 +1,8 @@
-const { Modal } = require("obsidian");
-const { MONTH_NAMES, MONTH_KEYS } = require("../../core/constants");
-const { toNum, showNotice, fmt, killWheelChange } = require("../../core/utils");
-const { readLedger, writeLedgerEntry, deleteLedgerEntry } = require("../../domain/ledger/io");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { MONTH_NAMES, MONTH_KEYS } from "../../core/constants";
+import { toNum, showNotice, fmt, killWheelChange } from "../../core/utils";
+import { readLedger, writeLedgerEntry, deleteLedgerEntry } from "../../domain/ledger/io";
 
 class CashflowCellModal extends Modal {
   constructor(app, settings, opts) {
@@ -206,4 +207,4 @@ class CashflowCellModal extends Modal {
   }
 }
 
-module.exports = { CashflowCellModal };
+export { CashflowCellModal };

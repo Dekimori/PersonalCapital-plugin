@@ -78,6 +78,18 @@ export default class PersonalCapitalPlugin extends Plugin {
 
     // ── Migration + first-activation scaffold ──
     this.app.workspace.onLayoutReady(async () => {
+      // Auto-detect: if onboarding flag is unset (e.g. user copied the
+      // finance/ folder from another vault but data.json wasn't copied
+      // along), but the vault clearly already has plugin data, mark
+      // onboarding done so the dashboard renders instead of asking the
+      // user to set up something they already have.
+      if (!this.settings.onboardingDone && (await this._hasExistingData())) {
+        this.settings.onboardingDone = true;
+        // Skip the legacy liquid-pools → accounts migration too —
+        // copied vaults already have the new format.
+        this.settings.migrationDone = true;
+        await this.saveSettings();
+      }
       if (!this.settings.migrationDone && this.settings.onboardingDone) {
         await runMigration(this.app, this.settings, this);
       }
@@ -127,7 +139,7 @@ export default class PersonalCapitalPlugin extends Plugin {
     this.addCommand({
       id: "pc-setup",
       name: "Setup / Onboarding",
-      callback: () => new OnboardingModal(this.app, this).open(),
+      callback: () => new OnboardingModal(this.app, this, () => {}).open(),
     });
 
     this.addCommand({
@@ -139,10 +151,12 @@ export default class PersonalCapitalPlugin extends Plugin {
     this.addCommand({
       id: "pc-update-asset-pick",
       name: "Update asset (pick)",
-      callback: () =>
-        new PickAssetModal(this.app, this, (file: TFile) =>
+      callback: () => {
+        const m = new PickAssetModal(this.app, this, (file: TFile) =>
           new AddAssetLineModal(this.app, file, this).open()
-        ).open(),
+        ) as unknown as { open: () => void };
+        m.open();
+      },
     });
 
     this.addCommand({
@@ -185,7 +199,7 @@ export default class PersonalCapitalPlugin extends Plugin {
       name: "Add transaction",
       callback: async () => {
         const accounts = await readAccounts(this.app, this.settings);
-        new AddTransactionModal(this.app, this, accounts).open();
+        new AddTransactionModal(this.app, this, accounts, () => {}).open();
       },
     });
 
@@ -244,6 +258,34 @@ export default class PersonalCapitalPlugin extends Plugin {
 
     const leaf = this.app.workspace.getLeaf("tab");
     await leaf.openFile(file, { state: { mode: "preview" } });
+  }
+
+  // ── Detect whether the vault already has plugin data ──
+  // True if any of the data surfaces (categories, assets, accounts,
+  // ledger JSONL) has at least one file. Used to skip the onboarding
+  // wizard when a user copies the finance/ folder from another vault.
+  async _hasExistingData(): Promise<boolean> {
+    const lc = (p: string) => p.toLowerCase().replace(/\/$/, "");
+    const folders = [
+      lc(this.settings.categoriesFolder),
+      lc(this.settings.assetsFolder),
+      lc(this.settings.accountsFolder || "finance/Data/accounts"),
+    ];
+    const md = this.app.vault.getMarkdownFiles();
+    for (const f of folders) {
+      if (md.some((m) => m.path.toLowerCase().startsWith(f + "/"))) return true;
+    }
+    const ledgerFolder = lc(this.settings.ledgerFolder || "finance/Data");
+    for (const f of this.app.vault.getFiles()) {
+      if (
+        f.path.toLowerCase().startsWith(ledgerFolder + "/") &&
+        f.name.startsWith("ledger-") &&
+        f.name.endsWith(".jsonl")
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // ── Create finance folder structure + all starter files if missing ──

@@ -1,6 +1,7 @@
-const { Modal } = require("obsidian");
-const { fmt, showNotice, killWheelChange } = require("../../core/utils");
-const { readAccounts } = require("../../domain/accounts/io");
+// @ts-nocheck — transitional; types incremental per file
+import { Modal } from "obsidian";
+import { fmt, showNotice, killWheelChange } from "../../core/utils";
+import { readAccounts } from "../../domain/accounts/io";
 
 // Country → currency mapping
 const COUNTRY_CURRENCY = {
@@ -318,4 +319,4 @@ class OnboardingModal extends Modal {
   }
 }
 
-module.exports = { OnboardingModal, COUNTRY_CURRENCY, COUNTRY_LIST };
+export { OnboardingModal, COUNTRY_CURRENCY, COUNTRY_LIST };

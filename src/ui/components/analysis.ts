@@ -1,7 +1,12 @@
-function renderAnalysisBlock(container, app, settings) {
-  // Lazy require to avoid circular dependency
-  const { InsightsModal } = require("../modals/insights");
+import type { App } from "obsidian";
+import { InsightsModal } from "../modals/insights";
+import type { PluginSettings } from "../../core/types";
 
+export function renderAnalysisBlock(
+  container: HTMLElement,
+  app: App,
+  settings: PluginSettings
+): void {
   const desc = container.createEl("p", { cls: "pc-analysis-desc" });
   desc.textContent = "Need insights on your capital? Prepare a prompt for your AI.";
 
@@ -14,8 +19,6 @@ function renderAnalysisBlock(container, app, settings) {
 
   const tip = container.createDiv({ cls: "pc-analysis-tip" });
   tip.createEl("span", {
-    text: "Adjust the prompt as you like. This tool does not provide investment recommendations \u2014 always use your own judgment.",
+    text: "Adjust the prompt as you like. This tool does not provide investment recommendations — always use your own judgment.",
   });
 }
-
-module.exports = { renderAnalysisBlock };
