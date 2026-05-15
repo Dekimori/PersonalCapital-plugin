@@ -23,23 +23,25 @@ Cashflow, assets, dividends, deposits, FX, all in plain text inside your vault.
 
 ## Why
 
-The easy way to finally start tracking your expenses and budget, and even more: grow your investments.
+The easy way to finally start tracking your expenses and investments.
 
-Built it for myself, but decided to share.
+**Personal Capital** keeps everything in your Obsidian vault as plain text
 
-**Personal Capital** keeps everything in your Obsidian vault as plain text:
+Currently implemented:
+- Dashboard, JSONL Ledger system with standart or monthly view
+- Assets tracking, auto-fetch changes (parcer), fetch fx-rates
+- Reconcile - you are not forced to be extra accurate
+- Export / Import for Beancount or Hledger format
 
-- A JSONL ledger is the single source of truth with one file per year, version-control-friendly.
-- The dashboard is rendered live from the ledger. No hidden state, no migrations, no lock-in.
-- Track your investments with fetch parser and auto update.
-- Migrate to / from beancount ledger (in development)
+**Why manual?** Discipline + strategy overview is MORE than each cent auto-tracking, if you need to strictly track each pennie you should consider an accounting software.
 
-**Why manual?** Its not an accountant tool for buisness, the Strategy > than the Detalis. 
-Organising your finance yourself is a habbit that will 100% make you more smart and efficient.
+**AI note** The AI (Claude code) using to review, refactor, add new features. Original logic and base code were handmade with my financial education background (strategy manager master's degree). UI/UX done manually.
 
 ---
 
-## Install
+## Installation
+
+First you need an [Obsidian app](obsidian.md)
 
 ### Recommended: BRAT
 
