@@ -2013,6 +2013,40 @@
 
 .personal-capital-buttons button { padding: 0.4em 1em; border-radius: var(--pc-radius-sm); }
 
+/* Qty label row — label + "All" sell button inline */
+.pc-qty-label-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.pc-qty-label-row label { flex: 1; }
+.pc-sell-all-btn {
+  font-size: var(--font-ui-smaller);
+  padding: 0.1em 0.5em;
+  border-radius: var(--pc-radius-sm);
+  cursor: pointer;
+  background: var(--background-modifier-hover);
+  border: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+}
+.pc-sell-all-btn:hover {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+/* Multiplier label row — label + auto-suggest hint */
+.pc-multiplier-label-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.pc-multiplier-label-row label { flex: 1; }
+.pc-multiplier-hint {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 /* Settings FX grid */
 .pc-settings-fx-grid {
   display:  flex;

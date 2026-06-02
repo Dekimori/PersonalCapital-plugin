@@ -51,6 +51,7 @@ export const ASSET_TYPES: readonly AssetType[] = [
   "deposit",
   "material",
   "crypto",
+  "futures",
 ];
 
 export const TYPE_ORDER: Record<string, number> = { Income: 0, Needs: 1, Wants: 2 };

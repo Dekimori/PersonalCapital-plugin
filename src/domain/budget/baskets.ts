@@ -66,7 +66,7 @@ export function classifyAssetBasket(asset: BasketAsset): BasketKey | null {
   if (/^RU\d{3}[A-Z]\d/.test(ticker)) return "core";
 
   if (t === "material") return null;
-  if (t === "crypto") return "flash";
+  if (t === "crypto" || t === "futures") return "flash";
 
   return "flash";
 }
@@ -150,6 +150,21 @@ export function checkInstrumentTriggers(assets: BasketAsset[]): BasketAlert[] {
           icon: "💧",
           asset: a.name,
           text: `${a.name}: yield on cost only ${fmt(yoc, 1)}% — low for fixed income`,
+        });
+      }
+    }
+
+    // Futures margin risk: leveraged positions can wipe out capital fast.
+    // Warn at -10% on notional (typical MOEX margin is 10-20%, so -10%
+    // means half the initial margin is gone). No exact margin data needed.
+    if (t === "futures" && invested > 0 && a.plAmount < 0) {
+      const lossPct = Math.abs(a.plAmount / invested) * 100;
+      if (lossPct >= 10) {
+        alerts.push({
+          type: "margin_risk",
+          icon: "⚠️",
+          asset: a.name,
+          text: `${a.name}: down ${fmt(lossPct, 1)}% on notional — check margin`,
         });
       }
     }

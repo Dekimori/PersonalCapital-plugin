@@ -176,8 +176,22 @@ export async function buildAssetFlowsAsync(
         priceHistory.push({ date: parts[0], price: val });
       }
     }
+    // Futures: convert point-based price history to home currency for
+    // consistent charting (body stores points, recalc writes ₽ to fm).
+    if (type === "futures") {
+      const mult = toNum(fm.multiplier);
+      if (mult > 0) {
+        for (const p of priceHistory) p.price = p.price * mult;
+      }
+    }
     priceHistory.sort((a, b) => a.date.localeCompare(b.date));
     logEvents.sort((a, b) => a.date.localeCompare(b.date));
+
+    // Futures: convert points → home currency using multiplier (mirrors recalc)
+    if (type === "futures") {
+      const mult = toNum(fm.multiplier);
+      if (mult > 0) totalInvested = totalInvested * mult;
+    }
 
     const currentPrice = (fm.current_price as number | null | undefined) ?? null;
     const accruedRubPerBond = type === "bond" ? toNum(fm.accrued_interest) : 0;

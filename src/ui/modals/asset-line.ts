@@ -20,6 +20,8 @@ class AddAssetLineModal extends Modal {
     // field visibility, and what "close" means in the archive prompt.
     const fm = this.app.metadataCache.getFileCache(file)?.frontmatter ?? {};
     const isDeposit = String(fm.type || "").toLowerCase() === "deposit";
+    const isFutures = String(fm.type || "").toLowerCase() === "futures";
+    const futuresMultiplier = isFutures ? toNum(fm.multiplier) : 0;
     const principal = toNum(fm.total_invested);
     const expectedClose = toNum(fm.current_value) || principal;
     // Use actual current qty for deposit close — a deposit that was topped up
@@ -67,7 +69,18 @@ class AddAssetLineModal extends Modal {
     opIn.addClass("personal-capital-input");
 
     const qtyWrap = form.createDiv();
-    qtyWrap.createEl("label", { text: "Quantity (units)" });
+    const qtyLabelRow = qtyWrap.createDiv({ cls: "pc-qty-label-row" });
+    qtyLabelRow.createEl("label", { text: "Quantity (units)" });
+    const sellAllBtn = qtyLabelRow.createEl("button", {
+      text: "All",
+      cls: "pc-sell-all-btn",
+    });
+    sellAllBtn.type = "button";
+    const currentQty = toNum(fm.current_qty);
+    sellAllBtn.onclick = (e) => {
+      e.preventDefault();
+      if (currentQty > 0) qtyIn.value = String(currentQty);
+    };
     const qtyIn = qtyWrap.createEl("input", { type: "number", step: "any" });
     qtyIn.placeholder = "e.g. 5";
     qtyIn.addClass("personal-capital-input");
@@ -118,6 +131,7 @@ class AddAssetLineModal extends Modal {
         op === "div" || op === "price" || op === "adjust" || (isDeposit && op === "sell")
           ? "none"
           : "";
+      sellAllBtn.style.display = op === "sell" && !isDeposit && currentQty > 0 ? "" : "none";
       // Price label & placeholder — deposit mode uses plain-language wording.
       const priceLabel = priceWrap.querySelector("label");
       if (isDeposit) {
@@ -219,7 +233,11 @@ class AddAssetLineModal extends Modal {
           entry.price = numPrice;
           // amt is cash movement (incl. fee); cost basis stays qty*price — fee is
           // kept out of basis so P&L isn't skewed by broker commissions.
-          entry.amt = numQty * numPrice + numFee;
+          // Futures: amt in home currency (points × multiplier).
+          entry.amt =
+            futuresMultiplier > 0
+              ? numQty * numPrice * futuresMultiplier + numFee
+              : numQty * numPrice + numFee;
           if (numFee > 0) entry.fee = numFee;
           // Only a real `buy` moves cash off a source account. Reinvest is a
           // non-cash unit increase (dividend → shares), so no `from`.
@@ -231,7 +249,11 @@ class AddAssetLineModal extends Modal {
           entry.price = numPrice;
           // Net proceeds hitting the account (gross − fee). Cost basis is
           // already fee-free, so P&L reflects fee impact only on sell side.
-          entry.amt = Math.max(0, numQty * numPrice - numFee);
+          // Futures: amt in home currency (points × multiplier).
+          entry.amt =
+            futuresMultiplier > 0
+              ? Math.max(0, numQty * numPrice * futuresMultiplier - numFee)
+              : Math.max(0, numQty * numPrice - numFee);
           if (numFee > 0) entry.fee = numFee;
           if (acctIn.value) entry.to = acctIn.value;
         } else if (op === "div") {

@@ -60,4 +60,19 @@ describe("parseAssetBody", () => {
     expect(result.currentQty).toBe(10);
     expect(result.totalInvested).toBe(1000);
   });
+
+  it("futures body: parser returns raw points (multiplier applied externally)", () => {
+    const body = [
+      "2025-06-02 | price | 0 | 754.69",
+      "2025-06-01 | buy | 2 | 735.9",
+    ].join("\n");
+    const result = parseAssetBody(body);
+
+    expect(result.currentQty).toBe(2);
+    expect(result.totalInvested).toBe(1471.8);
+    expect(result.avgCost).toBeCloseTo(735.9, 2);
+    expect(result.currentPrice).toBe(754.69);
+    expect(result.currentValue).toBeCloseTo(754.69 * 2, 2);
+    expect(result.plAmount).toBeCloseTo(754.69 * 2 - 1471.8, 2);
+  });
 });

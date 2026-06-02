@@ -5,6 +5,7 @@ import { toNum, showNotice, fmt, killWheelChange, makeAssetId } from "../../core
 import { recalcAsset } from "../../domain/assets/recalc";
 import { writeLedgerEntry } from "../../domain/ledger/io";
 import { readAccounts } from "../../domain/accounts/io";
+import { resolveSpec } from "../../domain/assets/futures-specs";
 
 class CreateAssetModal extends Modal {
   constructor(app, plugin) {
@@ -56,6 +57,51 @@ class CreateAssetModal extends Modal {
     faceIn.placeholder = "1000 (default for Russian bonds)";
     faceIn.addClass("personal-capital-input");
     killWheelChange(faceIn);
+
+    // Futures: multiplier (currency per point). Auto-suggested from MOEX ISS
+    // or bundled global table when user enters a ticker. Editable override.
+    const multiplierWrap = form.createDiv();
+    const multiplierLabelRow = multiplierWrap.createDiv({ cls: "pc-multiplier-label-row" });
+    multiplierLabelRow.createEl("label", { text: "Multiplier (per point)" });
+    const multiplierHint = multiplierLabelRow.createEl("span", {
+      cls: "pc-multiplier-hint",
+      text: "",
+    });
+    const multiplierIn = multiplierWrap.createEl("input", { type: "number", step: "any" });
+    multiplierIn.placeholder = "auto or manual";
+    multiplierIn.addClass("personal-capital-input");
+    killWheelChange(multiplierIn);
+
+    // Futures: expiry date (informational).
+    const expiryWrap = form.createDiv();
+    expiryWrap.createEl("label", { text: "Expiry date (optional)" });
+    const expiryIn = expiryWrap.createEl("input", { type: "date" });
+    expiryIn.addClass("personal-capital-input");
+
+    // Auto-suggest multiplier when ticker changes and type is futures.
+    let fetchingSpec = false;
+    const suggestMultiplier = async () => {
+      const ticker = (tickerIn.value || nameIn.value).trim();
+      if (!ticker || typeIn.value !== "futures" || fetchingSpec) return;
+      fetchingSpec = true;
+      multiplierHint.textContent = "looking up…";
+      try {
+        const spec = await resolveSpec(ticker, currIn.value);
+        if (spec) {
+          if (!multiplierIn.value) multiplierIn.value = String(spec.multiplier);
+          multiplierHint.textContent = spec.description;
+        } else {
+          multiplierHint.textContent = "not found, enter manually";
+        }
+      } catch {
+        multiplierHint.textContent = "lookup failed";
+      }
+      fetchingSpec = false;
+    };
+    tickerIn.addEventListener("blur", suggestMultiplier);
+    nameIn.addEventListener("blur", () => {
+      if (!tickerIn.value.trim()) suggestMultiplier();
+    });
 
     const priceIn = row(
       "Initial price / value",
@@ -211,12 +257,15 @@ class CreateAssetModal extends Modal {
     const updateTypeFields = () => {
       const t = typeIn.value;
       const isDeposit = t === "deposit";
+      const isFutures = t === "futures";
       faceWrap.style.display = t === "bond" ? "" : "none";
+      multiplierWrap.style.display = isFutures ? "" : "none";
+      expiryWrap.style.display = isFutures ? "" : "none";
       tplWrap.style.display = isDeposit ? "" : "none";
       // Bonds: coupons are always cash (you can't reinvest a coupon into the
       // same bond issue). Deposits: interest always cash. Materials/crypto:
       // no dividends either, but we keep the field in case of future edge cases.
-      divPolicyWrap.style.display = t === "bond" || isDeposit ? "none" : "";
+      divPolicyWrap.style.display = t === "bond" || isDeposit || isFutures ? "none" : "";
       // Deposit-mode UI: ticker + qty are meaningless (single-position asset),
       // dividend_account is redundant (always = source). Hide them and relabel
       // the remaining fields in plain human language.
@@ -226,14 +275,20 @@ class CreateAssetModal extends Modal {
       // Dynamic labels — swap to deposit-friendly wording.
       nameIn.parentElement.querySelector("label").textContent = isDeposit
         ? "Deposit name"
-        : "Ticker / Name";
+        : isFutures
+          ? "Contract name"
+          : "Ticker / Name";
       priceIn.parentElement.querySelector("label").textContent = isDeposit
         ? "Deposit amount"
-        : "Initial price / value";
+        : isFutures
+          ? "Entry price (points)"
+          : "Initial price / value";
       nameIn.placeholder = isDeposit
         ? "e.g. Tinkoff \u0432\u043A\u043B\u0430\u0434"
-        : "e.g. SBER, AAPL, MyDeposit";
-      priceIn.placeholder = isDeposit ? "e.g. 500000" : "e.g. 185.50";
+        : isFutures
+          ? "e.g. SFM6, SiZ6"
+          : "e.g. SBER, AAPL, MyDeposit";
+      priceIn.placeholder = isDeposit ? "e.g. 500000" : isFutures ? "e.g. 735.9" : "e.g. 185.50";
       // Button label follows context too.
       if (create) create.textContent = isDeposit ? "Open deposit" : "Create";
     };
@@ -283,6 +338,12 @@ class CreateAssetModal extends Modal {
       if (tickerVal) fmLines.push(`ticker: ${tickerVal}`);
       fmLines.push(`type: ${assetType}`, `currency: ${currIn.value.toUpperCase().trim() || "RUB"}`);
       if (assetType === "bond" && faceVal) fmLines.push(`face_value: ${faceVal}`);
+      if (assetType === "futures") {
+        const mult = toNum(multiplierIn.value);
+        if (mult > 0) fmLines.push(`multiplier: ${mult}`);
+        const expiry = expiryIn.value.trim();
+        if (expiry) fmLines.push(`expiry: ${expiry}`);
+      }
       // Dividend routing: bonds/deposits skip policy (always cash by nature).
       // Other types default to `cash` unless user chose `reinvest`.
       if (assetType !== "bond" && assetType !== "deposit") {
@@ -349,6 +410,9 @@ class CreateAssetModal extends Modal {
       if (qty && price) {
         const q = parseFloat(qty),
           p = parseFloat(price);
+        // Futures: ledger amt in home currency (points × multiplier)
+        const mult = assetType === "futures" ? toNum(multiplierIn.value) : 0;
+        const amt = mult > 0 ? q * p * mult + feeNum : q * p + feeNum;
         const entry = {
           d: date,
           type: "buy",
@@ -356,7 +420,7 @@ class CreateAssetModal extends Modal {
           asset_id: assetId,
           qty: q,
           price: p,
-          amt: q * p + feeNum,
+          amt,
         };
         if (feeNum > 0) entry.fee = feeNum;
         if (srcIn.value) entry.from = srcIn.value;

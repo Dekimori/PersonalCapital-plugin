@@ -84,6 +84,32 @@ export async function recalcAsset(
     }
   }
 
+  // Futures: body log is in exchange points; multiply by contract multiplier
+  // to convert totalInvested/avgCost/currentPrice/currentValue to home currency.
+  // Guard: missing or zero multiplier leaves values as-is (no silent corruption).
+  if (String(fm.type).toLowerCase() === "futures") {
+    const multiplier = toNum(fm.multiplier);
+    if (multiplier > 0) {
+      stats.totalInvested = parseFloat((stats.totalInvested * multiplier).toFixed(2));
+      stats.avgCost = parseFloat((stats.avgCost * multiplier).toFixed(4));
+      if (stats.currentPrice != null) {
+        stats.currentPrice = parseFloat((stats.currentPrice * multiplier).toFixed(4));
+      }
+      if (stats.initialPrice != null) {
+        stats.initialPrice = parseFloat((stats.initialPrice * multiplier).toFixed(4));
+      }
+      stats.currentValue =
+        stats.currentPrice != null
+          ? parseFloat((stats.currentPrice * stats.currentQty).toFixed(2))
+          : stats.totalInvested;
+      stats.plAmount = parseFloat((stats.currentValue - stats.totalInvested).toFixed(2));
+      stats.plPct =
+        stats.totalInvested > 0
+          ? parseFloat(((stats.plAmount / stats.totalInvested) * 100).toFixed(2))
+          : 0;
+    }
+  }
+
   await app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
     fm.current_qty = stats.currentQty;
     fm.avg_cost = stats.avgCost;

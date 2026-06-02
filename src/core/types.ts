@@ -47,7 +47,7 @@ export interface Category {
   type: CategoryType;
 }
 
-export type AssetType = "shares" | "bond" | "deposit" | "material" | "crypto";
+export type AssetType = "shares" | "bond" | "deposit" | "material" | "crypto" | "futures";
 
 export interface AssetStats {
   currentQty: number;
