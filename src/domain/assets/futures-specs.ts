@@ -177,10 +177,7 @@ export async function fetchMoexSpec(ticker: string): Promise<FuturesSpec | null>
  * RUB), then global table. Skips MOEX for non-RUB currencies to avoid
  * false matches (e.g. CME Silver "SI" vs MOEX "Si" USD/RUB future).
  */
-export async function resolveSpec(
-  ticker: string,
-  currency?: string
-): Promise<FuturesSpec | null> {
+export async function resolveSpec(ticker: string, currency?: string): Promise<FuturesSpec | null> {
   if (!ticker || !ticker.trim()) return null;
   const cur = (currency || "").toUpperCase();
   // Skip MOEX when currency clearly isn't RUB — prevents collisions like
