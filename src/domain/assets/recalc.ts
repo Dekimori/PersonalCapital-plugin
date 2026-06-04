@@ -19,7 +19,22 @@ export async function recalcAsset(
 
   const body = raw.slice(fmEnd + 3).replace(/^\n/, "");
   const stats = parseAssetBody(body);
-  const fm = app.metadataCache.getFileCache(file)?.frontmatter ?? {};
+  // metadataCache updates async — may be stale when recalc runs right after
+  // a file write (price updater → recalc). Parse top-level FM from raw text
+  // and merge with cache (cache wins for nested keys like template.rate).
+  const cacheFm = app.metadataCache.getFileCache(file)?.frontmatter ?? {};
+  const fm: Record<string, unknown> = { ...cacheFm };
+  const fmText = raw.slice(4, fmEnd);
+  for (const line of fmText.split("\n")) {
+    if (/^\s/.test(line)) continue;
+    const idx = line.indexOf(":");
+    if (idx < 1) continue;
+    const key = line.slice(0, idx).trim();
+    const val = line.slice(idx + 1).trim();
+    if (!val) continue;
+    const num = Number(val);
+    fm[key] = val === "true" ? true : val === "false" ? false : !isNaN(num) ? num : val;
+  }
 
   // Bond НКД is added to currentValue below (after deposit block) using fx
   // conversion. See bond block comment for full rationale on approach.
@@ -29,16 +44,19 @@ export async function recalcAsset(
   // via manual div op if the deposit pays monthly/quarterly to a card.
   // Rate source: top-level `interest_rate` (manual config) OR nested
   // `template.rate` (auto-log template). Either way it's annual %.
-  const depositRate = toNum(fm.interest_rate) || toNum(fm.template?.rate);
+  const depositRate = toNum(fm.interest_rate) || toNum((fm.template as any)?.rate);
   if (String(fm.type).toLowerCase() === "deposit" && depositRate > 0) {
     const principal = stats.totalInvested;
     const rate = depositRate / 100;
     // Start accrual clock from last div payout (bank paid interest to card),
     // else from initial_date. This way compounded deposits grow from day 0,
     // and simple-payout deposits show only "unpaid yet" interest.
-    const startDate = stats.lastDivDate || stats.initialDate || fm.initial_date;
+    const startDate = stats.lastDivDate || stats.initialDate || String(fm.initial_date || "");
     if (startDate && principal > 0) {
-      const days = Math.max(0, Math.floor((Date.now() - new Date(startDate).getTime()) / 86400000));
+      const days = Math.max(
+        0,
+        Math.floor((Date.now() - new Date(startDate as string).getTime()) / 86400000)
+      );
       const accrued = principal * rate * (days / 365);
       stats.currentValue = parseFloat((principal + accrued).toFixed(2));
       stats.currentPrice =

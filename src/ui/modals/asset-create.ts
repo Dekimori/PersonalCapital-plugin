@@ -138,6 +138,12 @@ class CreateAssetModal extends Modal {
     srcIn.createEl("option", { text: "— none —", value: "" });
     srcIn.addClass("personal-capital-input");
 
+    // Manual-only toggle — skips this asset during "Update prices".
+    const manualWrap = form.createDiv();
+    const manualLabel = manualWrap.createEl("label");
+    const manualIn = manualLabel.createEl("input", { type: "checkbox" });
+    manualLabel.appendText(" Manual only (skip auto price updates)");
+
     // Dividend routing (hidden for bonds — coupons are always cash).
     const divPolicyWrap = form.createDiv();
     divPolicyWrap.createEl("label", { text: "Dividend policy" });
@@ -305,10 +311,15 @@ class CreateAssetModal extends Modal {
     updateTypeFields();
 
     create.onclick = async () => {
-      const name = nameIn.value.trim();
-      if (!name) {
+      const rawName = nameIn.value.trim();
+      if (!rawName) {
         showNotice("Name is required");
         return;
+      }
+      const name = rawName.replace(/[\\/:]/g, "-");
+      if (name !== rawName) {
+        showNotice(`Renamed to "${name}" (filenames can't contain \\ / :)`);
+        nameIn.value = name;
       }
 
       const assetsFolder = this.plugin.settings.assetsFolder;
@@ -372,6 +383,8 @@ class CreateAssetModal extends Modal {
           if (tplEnd) fmLines.push(`  end_date: ${tplEnd}`);
         }
       }
+
+      if (manualIn.checked) fmLines.push("auto_update: false");
 
       fmLines.push(
         "current_qty:",

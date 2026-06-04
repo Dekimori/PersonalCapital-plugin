@@ -12,7 +12,7 @@ import type { LedgerEntry, PluginSettings } from "../../core/types";
 type StatusCb = ((msg: string) => void) | undefined;
 
 function resolveApiTicker(fm: any, filename: string): string {
-  if (fm.ticker) return String(fm.ticker).trim();
+  if (fm.ticker) return String(fm.ticker).trim().replace(/@+$/, "");
   const name = String(fm.name || filename).trim();
   return name.replace(/@+$/, "");
 }
@@ -243,6 +243,9 @@ async function updateSingleAssetPrice(
 
   const cache = app.metadataCache.getFileCache(file);
   const fm = cache?.frontmatter ?? {};
+  if (fm.auto_update === false) {
+    return { updated: false, ticker: file.basename, error: "skipped (auto_update: false)" };
+  }
   const apiTicker = resolveApiTicker(fm, file.basename);
   const currency = String(fm.currency || "RUB").toUpperCase();
   const type = String(fm.type || "shares").toLowerCase();

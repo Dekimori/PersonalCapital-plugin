@@ -193,7 +193,13 @@ export async function buildAssetFlowsAsync(
       if (mult > 0) totalInvested = totalInvested * mult;
     }
 
-    const currentPrice = (fm.current_price as number | null | undefined) ?? null;
+    let currentPrice = (fm.current_price as number | null | undefined) ?? null;
+    // Futures: fm.current_price may be in points (recalc stale cache) or
+    // already multiplied. Use priceHistory (already converted above) as
+    // authoritative source — it's always in home currency at this point.
+    if (type === "futures" && priceHistory.length > 0) {
+      currentPrice = priceHistory[priceHistory.length - 1].price;
+    }
     const accruedRubPerBond = type === "bond" ? toNum(fm.accrued_interest) : 0;
     const accruedNativeTotal =
       accruedRubPerBond > 0 && !fxMissing && fx > 0 && currentQty > 0
